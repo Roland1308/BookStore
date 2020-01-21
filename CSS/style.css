@@ -42,12 +42,12 @@
   background-color: rgb(119, 207, 255);
   color: black;
   transform: rotateY(180deg);
-  overflow-y: hidden;
+  overflow: initial;
 
 }
 
 .flex-container {
-    width: 80%;
+    width: 100%;
     margin: auto;
     display: flex;
     flex-wrap: wrap;
@@ -55,7 +55,7 @@
 }
 
 .flex-container > div {
-    margin: 10px;
+    margin: 5px;
   }
 
 h1 {
@@ -68,10 +68,10 @@ p {
 }
 
 .button {
-    width: 85px;
+    width: 100px;
     position: absolute;
-    left:50%;
-    transform: translate(-51px);
+    left:93px;
+    transform: translate(-55px);
     background-color: #4CAF50;
     border: none;
     color: white;

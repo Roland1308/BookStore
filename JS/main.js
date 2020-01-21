@@ -58,7 +58,6 @@ async function readData() {
         }
     };
     let books = JSON.parse(decoder.decode(array)).books;
-    console.log(books);
     let string = "";
     books.forEach(book => {
         let div = document.getElementById("card");
@@ -78,7 +77,6 @@ async function readData() {
             </div>
         </div>
             `;
-        console.log(string);
         div.innerHTML = string;
     });
     return;
