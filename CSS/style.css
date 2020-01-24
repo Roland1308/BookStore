@@ -5,6 +5,12 @@ body {
     background-size: cover;
 }
 
+#logo,
+.ubibook {
+  width: 100%;
+  height: auto;
+}
+
 #main {
   position: relative;
 }

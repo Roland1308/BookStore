@@ -31,12 +31,22 @@
             descrCheck: true,
             campoSearch: "",
             listLanguages: [],
-            selectedLanguage:"all"
+            selectedLanguage:"all",
+            descrLanguage:"Español"
           };
         }
 
-        async componentDidMount() {
+        componentDidMount () {
+          this.setState({
+            descrLanguage:"English"
+          })
+        }
+        
+        async componentDidUpdate(prevProps, prevState) {
+          if (prevState.descrLanguage !== this.state.descrLanguage) {
           const decoder = new TextDecoder("utf-8");
+          // let response = await fetch("https://api.myjson.com/bins/zyv02"); ENGLISH
+          // let response = await fetch("https://api.myjson.com/bins/1h3vb3");
           let response = await fetch("https://api.myjson.com/bins/zyv02");
           let length = response.headers.get("Content-Length");
           if (!length) {
@@ -81,10 +91,11 @@
           this.setState({
             books: JSON.parse(decoder.decode(array)).books
           });
+          console.log(this.state.books);
           this.setState({
             filteredBooks: this.state.books,
             listLanguages: Array.from(new Set(this.state.books.map(book => book.language)))
-          });
+          });}
         }
 
         handleChange = (e) => {
@@ -166,6 +177,9 @@
           };
           return (
             <div id="main">
+            <div id="logo">
+            <img className="ubibook" src="/images/LogoBooks.png" />
+            </div>
               <div className="flex-container fisso">
                 <div>
                   <select id="selState" onChange={this.handleLanguage}>
