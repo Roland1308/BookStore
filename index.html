@@ -1,42 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Book Store - UBIQUM</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    />
-    <link rel="stylesheet" href="./css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
-    />
-  </head>
-  <body>
 
-    <div id="app"></div>
+<head>
+  <title>Book Store - UBIQUM</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+</head>
 
-    <script
-      crossorigin
-      src="https://unpkg.com/react@16/umd/react.development.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
-    ></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script type="text/babel">
-    
-      class App extends React.Component {
+<body>
+
+  <div id="app"></div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+
+    class App extends React.Component {
         constructor(props) {
           super(props);
           this.state = {
             divStyle: {},
             loaderText: "Loading library...",
             books: [],
-            filteredBooks: []
+            filteredBooks: [],
+            titleCheck: true,
+            descrCheck: true,
+            campoSearch: ""
           };
         }
 
@@ -66,7 +59,8 @@
                   width: "${progBar}%",
                   paddingTop: "5px",
                   color: "white",
-                  textAlign: "center"
+                  textAlign: "center",
+                  height: "34px"
                 }
               });
             } else {
@@ -75,7 +69,8 @@
                   width: "50%",
                   paddingTop: "5px",
                   color: "white",
-                  textAlign: "center"
+                  textAlign: "center",
+                  height: "34px"
                 },
                 loaderText: "Library updated"
               });
@@ -90,14 +85,61 @@
         }
 
         handleChange = (e) => {
+            this.setState({
+              campoSearch: e.target.value.toLowerCase()
+            });
             let currentBooks = [];
-            let newBooks = [];
+            let newBooks = [];            
             if (e.target.value !== "") {
                 currentBooks = this.state.books;
                 newBooks = currentBooks.filter(item => {
-                    const lc = item.title.toLowerCase();
+                    const lcTitle = item.title.toLowerCase();
+                    const lcDescription = item.description.toLowerCase();
                     const filter = e.target.value.toLowerCase();
-                    return lc.includes(filter);
+                    return ((lcTitle.includes(filter) && this.state.titleCheck) || (lcDescription.includes(filter) && this.state.descrCheck)) ;
+                });
+            } else {
+                newBooks = this.state.books;
+            }
+            this.setState({
+                filteredBooks: newBooks
+            });
+        }
+
+        handleDescription = () => {
+          this.setState((state) => {
+            return {descrCheck: !this.state.descrCheck}
+          });
+          let currentBooks = [];
+          let newBooks = [];  
+          if (this.state.campoSearch !== "") {
+                currentBooks = this.state.books;
+                newBooks = currentBooks.filter(item => {
+                    const lcTitle = item.title.toLowerCase();
+                    const lcDescription = item.description.toLowerCase();
+                    const filter = this.state.campoSearch.toLowerCase();
+                    return ((lcTitle.includes(filter) && this.state.titleCheck) || (lcDescription.includes(filter) && !this.state.descrCheck)) ;
+                });
+            } else {
+                newBooks = this.state.books;
+            }
+            this.setState({
+                filteredBooks: newBooks
+            });
+        }
+        handleTitle = () => {
+          this.setState((state) => {
+            return {titleCheck: !this.state.titleCheck}
+          });
+          let currentBooks = [];
+          let newBooks = [];  
+          if (this.state.campoSearch !== "") {
+                currentBooks = this.state.books;
+                newBooks = currentBooks.filter(item => {
+                    const lcTitle = item.title.toLowerCase();
+                    const lcDescription = item.description.toLowerCase();
+                    const filter = this.state.campoSearch.toLowerCase();
+                    return ((lcTitle.includes(filter) && !this.state.titleCheck) || (lcDescription.includes(filter) && this.state.descrCheck)) ;
                 });
             } else {
                 newBooks = this.state.books;
@@ -117,7 +159,13 @@
               <div className="flex-container fisso">
                 <div>Select Language</div>
                 <div style={this.state.divStyle} className="barra">{this.state.loaderText}</div>
-                <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." />
+                  <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." />
+                <div>
+                  <input type="checkbox" name="title" id="title" value="Title" onChange={this.handleTitle} defaultChecked  />
+                  <label htmlFor="title">Title</label>
+                  <input type="checkbox" name="description" id="description" onChange={this.handleDescription} value="Description" defaultChecked  />
+                  <label htmlFor="description">Description</label>
+                </div>
               </div>
               <div className="flex-container">
                 {this.state.filteredBooks.map((book, i) => {
@@ -154,10 +202,10 @@
 
       ReactDOM.render(<App />, document.getElementById("app"));
     </script>
-  </body>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
 </html>
