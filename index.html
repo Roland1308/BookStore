@@ -29,7 +29,9 @@
             filteredBooks: [],
             titleCheck: true,
             descrCheck: true,
-            campoSearch: ""
+            campoSearch: "",
+            listLanguages: [],
+            selectedLanguage:"all"
           };
         }
 
@@ -80,7 +82,8 @@
             books: JSON.parse(decoder.decode(array)).books
           });
           this.setState({
-            filteredBooks: this.state.books
+            filteredBooks: this.state.books,
+            listLanguages: Array.from(new Set(this.state.books.map(book => book.language)))
           });
         }
 
@@ -128,25 +131,32 @@
             });
         }
         handleTitle = () => {
-          this.setState((state) => {
-            return {titleCheck: !this.state.titleCheck}
+        this.setState((state) => {
+        return {titleCheck: !this.state.titleCheck}
+        });
+        let currentBooks = [];
+        let newBooks = [];
+        if (this.state.campoSearch !== "") {
+        currentBooks = this.state.books;
+        newBooks = currentBooks.filter(item => {
+        const lcTitle = item.title.toLowerCase();
+        const lcDescription = item.description.toLowerCase();
+        const filter = this.state.campoSearch.toLowerCase();
+        return ((lcTitle.includes(filter) && !this.state.titleCheck) || (lcDescription.includes(filter) &&
+        this.state.descrCheck)) ;
+        });
+        } else {
+        newBooks = this.state.books;
+        }
+        this.setState({
+        filteredBooks: newBooks
+        });
+        }
+        handleLanguage = (e) => {
+          const filter = e.target.value;
+          this.setState({
+            selectedLanguage: filter
           });
-          let currentBooks = [];
-          let newBooks = [];  
-          if (this.state.campoSearch !== "") {
-                currentBooks = this.state.books;
-                newBooks = currentBooks.filter(item => {
-                    const lcTitle = item.title.toLowerCase();
-                    const lcDescription = item.description.toLowerCase();
-                    const filter = this.state.campoSearch.toLowerCase();
-                    return ((lcTitle.includes(filter) && !this.state.titleCheck) || (lcDescription.includes(filter) && this.state.descrCheck)) ;
-                });
-            } else {
-                newBooks = this.state.books;
-            }
-            this.setState({
-                filteredBooks: newBooks
-            });
         }
 
         render() {
@@ -157,7 +167,21 @@
           return (
             <div id="main">
               <div className="flex-container fisso">
-                <div>Select Language</div>
+                <div>
+                  <select id="selState" onChange={this.handleLanguage}>
+                    <option value="all" id="all">All Languages</option>
+                    {this.state.listLanguages.map((lang, i) => {
+                      return (
+                        <option value={lang} id={lang} key={i}>
+                          {lang==="es"? "Español" : null}
+                          {lang==="en"? "English" : null}
+                          {lang==="ca"? "Catalán" : null}
+                        </option>
+                      );
+                      })
+                    }      
+                  </select>
+                </div>
                 <div style={this.state.divStyle} className="barra">{this.state.loaderText}</div>
                   <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." />
                 <div>
@@ -167,31 +191,34 @@
                   <label htmlFor="description">Description</label>
                 </div>
               </div>
-              <div className="flex-container">
+              <div className="flex-container principale">
                 {this.state.filteredBooks.map((book, i) => {
                   return (
-                    <div key={i} className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <img
-                            src={book.cover}
-                            alt={book.title}
-                            style={stile}
-                          />
+                    <span key={i}>
+                      {this.state.selectedLanguage === book.language || this.state.selectedLanguage === "all" ? (
+                      <div className="flip-card">
+                        <div className="flip-card-inner">
+                          <div className="flip-card-front">
+                            <img
+                              src={book.cover}
+                              alt={book.title}
+                              style={stile}
+                            />
+                          </div>
+                          <div className="flip-card-back">
+                            <h1>{book.title}</h1>
+                            <p>{book.description}</p>
+                            <a
+                              href={book.detail}
+                              data-fancybox="gallery"
+                              data-options='{"infobar" : false, "buttons": ["close"]}'
+                            >
+                              <button className="button">Details</button>{" "}
+                            </a>
+                          </div>
                         </div>
-                        <div className="flip-card-back">
-                          <h1>{book.title}</h1>
-                          <p>{book.description}</p>
-                          <a
-                            href={book.detail}
-                            data-fancybox="gallery"
-                            data-options='{"infobar" : false, "buttons": ["close"]}'
-                          >
-                            <button className="button">Details</button>{" "}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                      </div>) : null} 
+                    </span>
                   );
                 })}
               </div>
