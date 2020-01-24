@@ -1,28 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Book Store - UBIQUM</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./CSS/style.css" />
-</head>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
+    />
+  </head>
+  <body>
 
-<body class="container">
-    <header>
-        <div id="loadBar"></div>
-    </header>
+    <div id="app"></div>
 
-    <div class="flex-container" id="card">
-    </div>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+    
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            divStyle: {},
+            loaderText: "Loading library...",
+            books: [],
+            filteredBooks: []
+          };
+        }
 
-    <footer>
-    </footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="./JS/main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-</body>
+        async componentDidMount() {
+          const decoder = new TextDecoder("utf-8");
+          let response = await fetch("https://api.myjson.com/bins/zyv02");
+          let length = response.headers.get("Content-Length");
+          if (!length) {
+            // something was wrong with response, just give up
+            return await response.arrayBuffer();
+          }
+          let array = new Uint8Array(length);
+          let at = 0; // to index into the array
+          let reader = response.body.getReader();
+          for (;;) {
+            let { done, value } = await reader.read();
+            if (done) {
+              break;
+            }
+            array.set(value, at);
+            at += value.length;
+            let progBar = (at / length).toFixed(2) * 50;
+            let div = document.getElementById("loadBar");
+            if (progBar < 50) {
+              this.setState({
+                divStyle: {
+                  width: "${progBar}%",
+                  paddingTop: "5px",
+                  color: "white",
+                  textAlign: "center"
+                }
+              });
+            } else {
+              this.setState({
+                divStyle: {
+                  width: "50%",
+                  paddingTop: "5px",
+                  color: "white",
+                  textAlign: "center"
+                },
+                loaderText: "Library updated"
+              });
+            }
+          }
+          this.setState({
+            books: JSON.parse(decoder.decode(array)).books
+          });
+          this.setState({
+            filteredBooks: this.state.books
+          });
+        }
 
+        handleChange = (e) => {
+            let currentBooks = [];
+            let newBooks = [];
+            if (e.target.value !== "") {
+                currentBooks = this.state.books;
+                newBooks = currentBooks.filter(item => {
+                    const lc = item.title.toLowerCase();
+                    const filter = e.target.value.toLowerCase();
+                    return lc.includes(filter);
+                });
+            } else {
+                newBooks = this.state.books;
+            }
+            this.setState({
+                filteredBooks: newBooks
+            });
+        }
+
+        render() {
+          const stile = {
+            width: "205px",
+            height: "320px"
+          };
+          return (
+            <div id="main">
+              <div className="flex-container fisso">
+                <div>Select Language</div>
+                <div style={this.state.divStyle} className="barra">{this.state.loaderText}</div>
+                <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." />
+              </div>
+              <div className="flex-container">
+                {this.state.filteredBooks.map((book, i) => {
+                  return (
+                    <div key={i} className="flip-card">
+                      <div className="flip-card-inner">
+                        <div className="flip-card-front">
+                          <img
+                            src={book.cover}
+                            alt={book.title}
+                            style={stile}
+                          />
+                        </div>
+                        <div className="flip-card-back">
+                          <h1>{book.title}</h1>
+                          <p>{book.description}</p>
+                          <a
+                            href={book.detail}
+                            data-fancybox="gallery"
+                            data-options='{"infobar" : false, "buttons": ["close"]}'
+                          >
+                            <button className="button">Details</button>{" "}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<App />, document.getElementById("app"));
+    </script>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </html>

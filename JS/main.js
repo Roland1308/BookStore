@@ -1,3 +1,5 @@
+readData()
+
 async function readData() {
     const decoder = new TextDecoder("utf-8");
     let response = await fetch("https://api.myjson.com/bins/zyv02");
@@ -61,8 +63,6 @@ async function readData() {
     let string = "";
     books.forEach(book => {
         let div = document.getElementById("card");
-        /*  let flipCard = document.createElement("div");
-         div.append(flipCard); */
         string += `
         <div class="flip-card">
             <div class="flip-card-inner">
@@ -82,4 +82,3 @@ async function readData() {
     return;
 };
 
-readData()

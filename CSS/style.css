@@ -1,3 +1,17 @@
+body {
+  background-image: linear-gradient(rgba(255, 255, 255, .8), rgba(255, 255, 255, 0.1)),
+    url("/images/1544793197_GettyImages-1061868580.jpg");
+}
+
+#main {
+  position: relative;
+}
+
+.barra {
+  background-image: url("/images/coste.jpg");
+  background-position: center;
+}
+
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {
   background-color: transparent;
@@ -58,6 +72,15 @@
     margin: 5px;
   }
 
+  .fisso {
+    position: sticky;
+    top: 10px;
+    height: px;
+    margin: 5px;
+    background-color: cadetblue;
+    z-index: 10;
+  }
+
 h1 {
     text-align: center;
     font-size: 1.4rem;
@@ -83,7 +106,6 @@ p {
     transition-duration: 0.4s;
   }
   
-
   .button:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
   }
