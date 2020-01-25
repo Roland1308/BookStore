@@ -46,8 +46,6 @@
           if (prevState.descrLanguage !== this.state.descrLanguage) {
           const decoder = new TextDecoder("utf-8");
           const url = this.state.descrLanguage === "Español" ? "https://api.myjson.com/bins/zyv02" : "https://api.myjson.com/bins/1h3vb3";
-          // let response = await fetch("https://api.myjson.com/bins/zyv02"); ENGLISH
-          // let response = await fetch("https://api.myjson.com/bins/1h3vb3");
           let response = await fetch(url);
           let length = response.headers.get("Content-Length");
           if (!length) {
@@ -105,7 +103,6 @@
             this.setState({
               descrLanguage: lang.includes("inglese") ? "Español" : "English"
             })
-          console.log(this.state.descrLanguage);
         }
 
         handleChange = (e) => {
