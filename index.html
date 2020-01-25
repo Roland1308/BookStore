@@ -89,17 +89,14 @@
               });
             }
           }
-          
           const libri = JSON.parse(decoder.decode(array)).books;
           this.setState({
             books: this.state.descrLanguage === "Español" ? libri : libri.map(({portada, detalle, titulo, descripcion, idioma}) => ({cover:portada, detail:detalle, title:titulo, description:descripcion, language:idioma}))
           });
-
-console.log(this.state.books);
-
           this.setState({
             filteredBooks: this.state.books,
-            listLanguages: Array.from(new Set(this.state.books.map(book => book.language)))
+            listLanguages: Array.from(new Set(this.state.books.map(book => book.language))),
+            campoSearch: ""
           });}
         }
 
@@ -192,7 +189,7 @@ console.log(this.state.books);
             <div>
           
               <header className="headerContainer">
-                  <img className="ubibook" src="/images/LogoBooks.png" />
+                  <img className="ubibook" src="/images/LogoBooks.jpg" />
                   <div className="bandiereContainer">
                     <img className={this.state.descrLanguage==="Español" ? "bandiera" : "bandiera select"} src="/images/bandieraspagnola.gif" onClick={this.changeDescription} />
                     <img className={this.state.descrLanguage==="English" ? "bandiera" : "bandiera select"} src="/images/bandierainglese.gif" onClick={this.changeDescription} />
@@ -217,7 +214,7 @@ console.log(this.state.books);
                   </select>
                 </div>
                 <div style={this.state.divStyle} className="barra">{this.state.loaderText}</div>
-                  <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." />
+                  <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." value={this.state.campoSearch} />
                 <div>
                   <input type="checkbox" name="title" id="title" value="Title" onChange={this.handleTitle} defaultChecked  />
                   <label htmlFor="title">Title</label>
