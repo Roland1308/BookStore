@@ -6,6 +6,8 @@ body {
 }
 
  .headerContainer {
+  border: 2px solid black;
+  border-radius: 2vw;
   background-color: grey;
   width: 100%;
   display: flex;
@@ -15,7 +17,9 @@ body {
 }
 
 .ubibook {
+  border-radius: 2vw 0 0 2vw;
   width: 87%;
+  
 }
 
 .bandiereContainer {
@@ -84,7 +88,9 @@ body {
 
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {
-  background-color: transparent;
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, .8), 0 17px 50px 0 rgba(0, 0, 0, 0.5);
+
+  background-color: rgba(0, 0, 0, .5);
   width: 205px;
   height: 320px;
   perspective: 1000px;
@@ -145,6 +151,7 @@ body {
 }
 
 .fisso {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, .8), 0 17px 50px 0 rgba(0, 0, 0, 0.5);
   position: sticky;
   top: 0px;
   margin-bottom: 10px;

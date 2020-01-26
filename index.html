@@ -32,20 +32,21 @@
             campoSearch: "",
             listLanguages: [],
             selectedLanguage:"all",
-            descrLanguage:"English"
+            descrLanguage:""
           };
         }
 
         componentDidMount () {
+          const userLang = navigator.language || navigator.userLanguage; 
           this.setState({
-            descrLanguage: "Español"
+            descrLanguage: userLang === "en" ? "English" : "Español"
           })
         }
         
         async componentDidUpdate(prevProps, prevState) {
           if (prevState.descrLanguage !== this.state.descrLanguage) {
           const decoder = new TextDecoder("utf-8");
-          const url = this.state.descrLanguage === "Español" ? "https://api.myjson.com/bins/zyv02" : "https://api.myjson.com/bins/1h3vb3";
+          const url = this.state.descrLanguage === "English" ? "https://api.myjson.com/bins/zyv02" : "https://api.myjson.com/bins/1h3vb3";
           let response = await fetch(url);
           let length = response.headers.get("Content-Length");
           if (!length) {
@@ -89,7 +90,7 @@
           }
           const libri = JSON.parse(decoder.decode(array)).books;
           this.setState({
-            books: this.state.descrLanguage === "Español" ? libri : libri.map(({portada, detalle, titulo, descripcion, idioma}) => ({cover:portada, detail:detalle, title:titulo, description:descripcion, language:idioma}))
+            books: this.state.descrLanguage === "English" ? libri : libri.map(({portada, detalle, titulo, descripcion, idioma}) => ({cover:portada, detail:detalle, title:titulo, description:descripcion, language:idioma}))
           });
           this.setState({
             filteredBooks: this.state.books,
@@ -101,7 +102,7 @@
         changeDescription = (e) => {
           const lang = (e.target.src);
             this.setState({
-              descrLanguage: lang.includes("inglese") ? "Español" : "English"
+              descrLanguage: lang.includes("inglese") ? "English" : "Español"
             })
         }
 
@@ -188,8 +189,8 @@
               <header className="headerContainer">
                   <img className="ubibook" src="/images/LogoBooks.jpg" />
                   <div className="bandiereContainer">
-                    <img className={this.state.descrLanguage==="Español" ? "bandiera" : "bandiera select"} src="/images/bandieraspagnola.gif" onClick={this.changeDescription} />
-                    <img className={this.state.descrLanguage==="English" ? "bandiera" : "bandiera select"} src="/images/bandierainglese.gif" onClick={this.changeDescription} />
+                    <img className={this.state.descrLanguage==="English" ? "bandiera" : "bandiera select"} src="/images/bandieraspagnola.gif" onClick={this.changeDescription} />
+                    <img className={this.state.descrLanguage==="Español" ? "bandiera" : "bandiera select"} src="/images/bandierainglese.gif" onClick={this.changeDescription} />
                   </div>
               </header>
 
@@ -201,8 +202,8 @@
                     {this.state.listLanguages.map((lang, i) => {
                       return (
                         <option value={lang} id={lang} key={i}>
-                          {lang==="es"? "Español" : null}
-                          {lang==="en"? "English" : null}
+                          {lang==="es"? "English" : null}
+                          {lang==="en"? "Español" : null}
                           {lang==="ca"? "Catalán" : null}
                         </option>
                       );
