@@ -1,5 +1,5 @@
 body {
-  font-family: cursive;
+  font-family: cursive, Georgia, 'Times New Roman', Times, serif;
   background-image: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0.5)),
     url("/images/1544793197_GettyImages-1061868580.jpg");
     background-size: cover;
