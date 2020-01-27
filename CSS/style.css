@@ -3,7 +3,7 @@ body {
   background-image: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0.5)),
     url("/images/1544793197_GettyImages-1061868580.jpg");
     background-size: cover;
-    padding: 10px 5px;
+    padding: 10px;
 }
 
 .bandiereContainer {
@@ -117,8 +117,9 @@ body {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, .8), 0 17px 50px 0 rgba(0, 0, 0, 0.5);
   position: sticky;
   top: 0px;
-  margin: 10px;
   padding-top: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   background-color: cadetblue;
   z-index: 10;
 }
