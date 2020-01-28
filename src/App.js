@@ -1,4 +1,8 @@
-import React from 'react';
+import React from "react";
+import RenderBooks from "./components/RenderBooks";
+import Testata from "./components/Testata";
+import DropLang from "./components/DropLang";
+import SearchTitleDesc from "./components/SearchTitleDesc";
 
 class App extends React.Component {
   constructor(props) {
@@ -8,8 +12,6 @@ class App extends React.Component {
       loaderText: "Loading library...",
       books: [],
       filteredBooks: [],
-      titleCheck: true,
-      descrCheck: true,
       campoSearch: "",
       listLanguages: [],
       selectedLanguage: "all",
@@ -49,7 +51,6 @@ class App extends React.Component {
         at += value.length;
         let progBar = (at / length).toFixed(2) * 50;
         if (progBar < 50) {
-          console.log(progBar);
           this.setState({
             divStyle: {
               width: progBar.toString() + "%",
@@ -97,208 +98,60 @@ class App extends React.Component {
     }
   }
 
-  changeDescription = e => {
-    const lang = e.target.src;
+  changeDescription = lang => {
     this.setState({
       descrLanguage: lang.includes("inglese") ? "English" : "Español"
     });
   };
 
-  handleChange = e => {
+  handleChange = (newBooks, campoCerca) => {
     this.setState({
-      campoSearch: e.target.value.toLowerCase()
-    });
-    let currentBooks = [];
-    let newBooks = [];
-    if (this.state.campoSearch !== "") {
-      currentBooks = this.state.books;
-      newBooks = currentBooks.filter(item => {
-        const lcTitle = item.title.toLowerCase();
-        const lcDescription = item.description.toLowerCase();
-        const filter = e.target.value.toLowerCase();
-        return (
-          (lcTitle.includes(filter) && this.state.titleCheck) ||
-          (lcDescription.includes(filter) && this.state.descrCheck)
-        );
-      });
-    } else {
-      newBooks = this.state.books;
-    }
-    this.setState({
-      filteredBooks: newBooks
+      filteredBooks: newBooks,
+      campoSearch: campoCerca
     });
   };
 
-  handleDescription = () => {
-    this.setState({
-      descrCheck: !this.state.descrCheck
-    });
-    let currentBooks = [];
-    let newBooks = [];
-    if (this.state.campoSearch !== "") {
-      currentBooks = this.state.books;
-      newBooks = currentBooks.filter(item => {
-        const lcTitle = item.title.toLowerCase();
-        const lcDescription = item.description.toLowerCase();
-        const filter = this.state.campoSearch.toLowerCase();
-        return (
-          (lcTitle.includes(filter) && this.state.titleCheck) ||
-          (lcDescription.includes(filter) && !this.state.descrCheck)
-        );
-      });
-    } else {
-      newBooks = this.state.books;
-    }
-    this.setState({
-      filteredBooks: newBooks
-    });
-  };
-  handleTitle = () => {
-    this.setState({
-      titleCheck: !this.state.titleCheck
-    });
-    let currentBooks = [];
-    let newBooks = [];
-    if (this.state.campoSearch !== "") {
-      currentBooks = this.state.books;
-      newBooks = currentBooks.filter(item => {
-        const lcTitle = item.title.toLowerCase();
-        const lcDescription = item.description.toLowerCase();
-        const filter = this.state.campoSearch.toLowerCase();
-        return (
-          (lcTitle.includes(filter) && !this.state.titleCheck) ||
-          (lcDescription.includes(filter) && this.state.descrCheck)
-        );
-      });
-    } else {
-      newBooks = this.state.books;
-    }
-    this.setState({
-      filteredBooks: newBooks
-    });
-  };
-  handleLanguage = e => {
-    const filter = e.target.value;
+  handleLanguage = filter => {
     this.setState({
       selectedLanguage: filter
     });
   };
 
   render() {
-    const stile = {
-      width: "205px",
-      height: "320px"
-    };
     return (
       <div>
-        <header className="bandiereContainer">
-          <div
-            className={
-              this.state.descrLanguage === "English"
-                ? "bandiera"
-                : "bandiera select"
-            }
-          >
-            <img
-              src={require('./images/bandieraspagnola.gif')}
-              alt="Spanish Flag"
-              onClick={this.changeDescription}
-            />
-          </div>
-          <div
-            className={
-              this.state.descrLanguage === "Español"
-                ? "bandiera"
-                : "bandiera select"
-            }
-          >
-            <img
-              src={require('./images/bandierainglese.gif')}
-              alt="English Flag"
-              onClick={this.changeDescription}
-            />
-          </div>
-        </header>
+        <Testata
+          descrLanguage={this.state.descrLanguage}
+          changeDescription={this.changeDescription}
+        />
         <div className="flex-container fisso">
-          <div>
-            <select id="selState" onChange={this.handleLanguage}>
-              <option value="all" id="all">
-                All Languages
-              </option>
-              {this.state.listLanguages.map((lang, i) => {
-                return (
-                  <option value={lang} id={lang} key={i}>
-                    {lang === "en" ? "English" : null}
-                    {lang === "es" ? "Español" : null}
-                    {lang === "ca" ? "Catalán" : null}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+          <DropLang
+            handleLanguage={this.handleLanguage}
+            listLanguages={this.state.listLanguages}
+          />
           <div style={this.state.divStyle} className="barra">
             {this.state.loaderText}
           </div>
-          <input
-            type="text"
-            className="input"
-            onChange={this.handleChange}
-            placeholder="Search..."
-            value={this.state.campoSearch}
+          <SearchTitleDesc 
+            handleChange={this.handleChange} 
+            books={this.state.books} 
+            campoSearch={this.state.campoSearch}
           />
-          <div>
-            <input
-              type="checkbox"
-              name="title"
-              id="title"
-              value="Title"
-              onChange={this.handleTitle}
-              defaultChecked
-            />
-            <label htmlFor="title">Title</label>
-            <input
-              type="checkbox"
-              name="description"
-              id="description"
-              onChange={this.handleDescription}
-              value="Description"
-              defaultChecked
-            />
-            <label htmlFor="description">Description</label>
-          </div>
         </div>
         <div className="flex-container principale">
-          {this.state.filteredBooks.map((book, i) => {
+          { this.state.filteredBooks.length > 0 ? 
+          this.state.filteredBooks.map((book, i) => {
             return (
               <span key={i}>
                 {this.state.selectedLanguage === book.language ||
                 this.state.selectedLanguage === "all" ? (
-                  <div className="flip-card">
-                    <div className="flip-card-inner">
-                      <div className="flip-card-front">
-                        <img
-                          src={book.cover}
-                          alt={book.title}
-                          style={stile}
-                        />
-                      </div>
-                      <div className="flip-card-back">
-                        <h1>{book.title}</h1>
-                        <p>{book.description}</p>
-                        <a
-                          href={book.detail}
-                          data-fancybox="gallery"
-                          data-options='{"infobar" : false, "buttons": ["close"]}'
-                        >
-                          <button className="button">Details</button>{" "}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                  <RenderBooks libro={book} />
                 ) : null}
               </span>
             );
-          })}
+          })  :
+          <p>ERROR</p>
+          }
         </div>
       </div>
     );
