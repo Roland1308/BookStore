@@ -80,7 +80,7 @@
               if (progBar < 50) {
                 this.setState({
                   divStyle: {
-                    width: "${progBar}%",
+                    width: progBar.toString() + "%",
                     paddingTop: "5px",
                     color: "white",
                     textAlign: "center",
@@ -90,7 +90,7 @@
               } else {
                 this.setState({
                   divStyle: {
-                    width: "50%",
+                    width: progBar.toString() + "%",
                     paddingTop: "5px",
                     color: "white",
                     textAlign: "center",
