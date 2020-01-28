@@ -49,9 +49,10 @@ class App extends React.Component {
         at += value.length;
         let progBar = (at / length).toFixed(2) * 50;
         if (progBar < 50) {
+          console.log(progBar);
           this.setState({
             divStyle: {
-              width: "{progBar}%",
+              width: progBar.toString() + "%",
               paddingTop: "5px",
               color: "white",
               textAlign: "center",
@@ -61,7 +62,7 @@ class App extends React.Component {
         } else {
           this.setState({
             divStyle: {
-              width: "50%",
+              width: progBar.toString() + "%",
               paddingTop: "5px",
               color: "white",
               textAlign: "center",
