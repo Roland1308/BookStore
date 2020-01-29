@@ -1,8 +1,14 @@
 import React from "react";
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom';
 import RenderBooks from "./components/RenderBooks";
 import Testata from "./components/Testata";
 import DropLang from "./components/DropLang";
 import SearchTitleDesc from "./components/SearchTitleDesc";
+import Child from "./components/Child";
+
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +21,9 @@ class App extends React.Component {
       campoSearch: "",
       listLanguages: [],
       selectedLanguage: "all",
-      descrLanguage: "Lingua"
+      descrLanguage: "Lingua",
+      visible: true,
+      selectedBook: 0
     };
   }
 
@@ -138,21 +146,24 @@ class App extends React.Component {
             campoSearch={this.state.campoSearch}
           />
         </div>
-        <div className="flex-container principale">
-          { this.state.filteredBooks.length > 0 ? 
-          this.state.filteredBooks.map((book, i) => {
-            return (
-              <span key={i}>
-                {this.state.selectedLanguage === book.language ||
-                this.state.selectedLanguage === "all" ? (
-                  <RenderBooks libro={book} />
-                ) : null}
-              </span>
-            );
-          })  :
-          <p>ERROR</p>
-          }
-        </div>
+        {this.state.visible && (<div className="flex-container principale">
+          <Router>
+            { this.state.filteredBooks.length > 0 ? 
+            this.state.filteredBooks.map((book, i) => {
+              return (
+                <span key={i}>
+                  {this.state.selectedLanguage === book.language ||
+                  this.state.selectedLanguage === "all" ? (
+                    <RenderBooks libro={book} indice={i} />
+                  ) : null}
+                </span>
+              );
+            })  :
+            <p>ERROR</p>
+            }
+            <Route path="/:id" component={Child}/>
+          </Router>
+        </div>)}}
       </div>
     );
   }

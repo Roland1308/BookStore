@@ -1,4 +1,7 @@
 import React from "react";
+import {
+  Link
+} from 'react-router-dom';
 
 function RenderBooks(props) {
   const stile = {
@@ -14,13 +17,14 @@ function RenderBooks(props) {
         <div className="flip-card-back">
           <h1>{props.libro.title}</h1>
           <p>{props.libro.description}</p>
-          <a
-            href={props.libro.detail}
-            data-fancybox="gallery"
-            data-options='{"infobar" : false, "buttons": ["close"]}'
-          >
-            <button className="button">Details</button>{" "}
-          </a>
+          <Link to={{
+            pathname: props.indice.toString(),
+            state: {
+              url: props.libro.detail
+            }
+          }}>
+            <button className="button">Details</button>
+          </Link>
         </div>
       </div>
     </div>
