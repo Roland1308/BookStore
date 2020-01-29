@@ -3,8 +3,9 @@ body {
   background-image: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0.5)),
     url("./images/1544793197_GettyImages-1061868580.jpg");
     background-size: contain;
-    padding: 10px;
     background-repeat: repeat;
+    margin: 0;
+    padding-top: 10px;
 }
 
 .bandiereContainer {
@@ -117,12 +118,13 @@ body {
 .fisso {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, .8), 0 17px 50px 0 rgba(0, 0, 0, 0.5);
   position: sticky;
+  width: 98%;
   top: 0px;
-  padding-top: 5px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding-top: 10px;
+  margin: 10px;
   background-color: cadetblue;
   z-index: 10;
+  justify-content: space-evenly;
 }
 
 h1 {
@@ -167,6 +169,34 @@ label {
 }
 
 .principale {
-  width: 95%;
+  width: 90%;
   margin-left: auto;
+}
+
+.details {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: center;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  margin: auto;
+}
+
+.details-interno,
+.details-close {
+  background-color: seagreen;
+  height: 5vw;
+  margin-top: 0;
+  border-radius: 2vw;
+  cursor: pointer;
+}
+
+.details-close {
+  background-color: rgb(250, 79, 79);
+  position: absolute;
+  right: 0;
 }

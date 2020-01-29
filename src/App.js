@@ -1,14 +1,10 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route
-} from 'react-router-dom';
-import RenderBooks from "./components/RenderBooks";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Testata from "./components/Testata";
 import DropLang from "./components/DropLang";
 import SearchTitleDesc from "./components/SearchTitleDesc";
 import Child from "./components/Child";
-
+import Home from "./views/Home";
 
 class App extends React.Component {
   constructor(props) {
@@ -140,30 +136,36 @@ class App extends React.Component {
           <div style={this.state.divStyle} className="barra">
             {this.state.loaderText}
           </div>
-          <SearchTitleDesc 
-            handleChange={this.handleChange} 
-            books={this.state.books} 
+          <SearchTitleDesc
+            handleChange={this.handleChange}
+            books={this.state.books}
             campoSearch={this.state.campoSearch}
           />
         </div>
-        {this.state.visible && (<div className="flex-container principale">
-          <Router>
-            { this.state.filteredBooks.length > 0 ? 
-            this.state.filteredBooks.map((book, i) => {
-              return (
-                <span key={i}>
-                  {this.state.selectedLanguage === book.language ||
-                  this.state.selectedLanguage === "all" ? (
-                    <RenderBooks libro={book} indice={i} />
-                  ) : null}
-                </span>
-              );
-            })  :
-            <p>ERROR</p>
-            }
-            <Route path="/:id" component={Child}/>
-          </Router>
-        </div>)}}
+        <Router>
+          <Route
+            exact
+            path="/"
+            render={props => (
+              <Home
+                filteredBooks={this.state.filteredBooks}
+                selectedLanguage={this.state.selectedLanguage}
+                {...props}
+              />
+            )}
+          />
+           <Route
+            exact
+            path="/:id"
+            render={props => (
+              <Child
+                filteredBooks={this.state.filteredBooks}
+                selectedLanguage={this.state.selectedLanguage}
+                {...props}
+              />
+            )}
+          />
+        </Router>
       </div>
     );
   }
