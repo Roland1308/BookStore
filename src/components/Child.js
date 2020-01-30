@@ -5,17 +5,43 @@ class Child extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pos: null,
+      pos: this.props.location.id,
       showBook: "",
-      ritorna: false
+      ritorna: false,
+      visualPrev: true,
+      visualNext: true
     };
   }
 
   componentDidMount() {    
       this.setState({
         pos: this.props.location.id,
-        showBook: this.props.filteredBooks[this.props.location.id].detail
+        showBook: this.props.filteredBooks[this.props.location.id].detail,
+        len: this.props.filteredBooks.length
       });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.pos !== this.state.pos) {
+      if (this.state.pos !== 0) {
+        this.setState({
+          visualPrev:  (this.props.filteredBooks[this.state.pos - 1].language !== this.props.selectedLanguage) && this.props.selectedLanguage !== "all" ? false : true
+        })
+      } else {
+        this.setState({
+          visualPrev: false
+        })
+      };
+      if (this.state.pos !== this.state.len -1) {
+        this.setState({
+          visualNext:  (this.props.filteredBooks[this.state.pos + 1].language !== this.props.selectedLanguage) && this.props.selectedLanguage !== "all" ? false : true
+        })
+      } else {
+        this.setState({
+          visualNext: false
+        })
+      }
+    }
   }
 
   previous = () => {
@@ -32,7 +58,7 @@ class Child extends React.Component {
   };
 
   next = () => {
-    for (let i = this.state.pos + 1, len = this.props.filteredBooks.length ; i < len; i++) {
+    for (let i = this.state.pos + 1; i < this.state.len; i++) {
       if (
         this.props.filteredBooks[i].language === this.props.selectedLanguage ||
         "all" === this.props.selectedLanguage) {
@@ -51,16 +77,21 @@ class Child extends React.Component {
   };
 
   render() {
+    document.body.classList.add("stop-scrolling");
     if (this.state.ritorna) {
+      document.body.classList.remove("stop-scrolling");
       return <Redirect to="/" />;
     }
     let bookToShow =
       this.state.pos !== null
         ? this.props.filteredBooks[this.state.pos].detail
         : null;
+    let scrollPos = {
+      top: window.pageYOffset.toString()+"px"
+    };
     return (
-      <div className="details">
-        {this.state.pos > 0 && (
+      <div className="details" style={ scrollPos }>
+        {this.state.visualPrev && (
           <div>
             <button className="details-interno" onClick={this.previous}>
               Prev
@@ -70,7 +101,7 @@ class Child extends React.Component {
         <div>
           <img src={bookToShow} alt="Details" />
         </div>
-        {this.state.pos < this.props.filteredBooks.length - 1 && (
+        {this.state.visualNext && (
           <div>
             <button className="details-interno" onClick={this.next}>
               Next
