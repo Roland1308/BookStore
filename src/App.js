@@ -142,23 +142,23 @@ class App extends React.Component {
             campoSearch={this.state.campoSearch}
           />
         </div>
-          <Router>
-        <div className="flex-container principale">
-      {this.state.filteredBooks.length > 0 ? (
-        this.state.filteredBooks.map((book, i) => {
-          return this.state.selectedLanguage === book.language ||
-            this.state.selectedLanguage === "all" ? (
-            <div className="flip-card" key={i}>
-              <RenderBooks libro={book} indice={i} />
-            </div>
-          ) : null;
-        })
-      ) : (
-        <p>ERROR</p>
-      )}
-    </div>
-          
-           <Route
+        <Router>
+          <div className="flex-container principale">
+            {this.state.filteredBooks.length > 0 ? (
+              this.state.filteredBooks.map((book, i) => {
+                return this.state.selectedLanguage === book.language ||
+                  this.state.selectedLanguage === "all" ? (
+                  <div className="flip-card" key={i}>
+                    <RenderBooks libro={book} indice={i} />
+                  </div>
+                ) : null;
+              })
+            ) : (
+              <p>ERROR</p>
+            )}
+          </div>
+
+          <Route
             exact
             path="/:id"
             render={props => (
